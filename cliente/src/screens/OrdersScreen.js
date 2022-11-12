@@ -63,7 +63,7 @@ const OrdersScreen = () => {
                   <td>{order.Total}</td>
                   <td>
                     <Link
-                      to={'/products'}//`/edit/${user.idUser}`}
+                      to={`/orders/${order.id}`}
                     >
                       <li className='btn btn-link'>Edit</li>
                     </Link>
