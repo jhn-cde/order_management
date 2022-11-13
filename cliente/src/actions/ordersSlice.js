@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit"
 import axios from 'axios'
 
 
@@ -6,7 +6,6 @@ const initialState = {
   list: [],
   status: 'idle'
 }
-
 
 export const ordersSlice = createSlice({
   name: 'orders',
