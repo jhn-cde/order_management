@@ -22,6 +22,7 @@ const ProductScreen = () => {
     e.preventDefault()
     if(productid !== '-1'){
       dispatch(edit(product))
+      navigate('/products')
     }else{
       const newProduct = {
         ...product,

@@ -49,7 +49,7 @@ router.post('/addorder', (req, res) => {
       StateTax: StateTax,
       FederalTax: FederalTax
     },
-    TotalTaxes: Math.round(CityTax+CountyTax+StateTax+FederalTax * 100) / 100,
+    TotalTaxes: CityTax+CountyTax+StateTax+FederalTax,
     Total: Total,
     products: req.body.products
   })
