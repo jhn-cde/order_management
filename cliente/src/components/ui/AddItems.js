@@ -26,8 +26,9 @@ const AddItems = ({children, onSaveItems, products=[]}) => {
   
   const changeQuantity = ({value, productid}) => {
     const addedList = addedProducts.map(p => {
-      p.Quantity = productid===p.id? value: p.Quantity
-      return p
+      let tmp = {...p}
+      tmp.Quantity = productid===tmp.id? value: tmp.Quantity
+      return tmp
     })
     setAddedProducts(addedList)
     const tmpSubTotal = addedList.reduce((ac, product) => ac + product.Unitprice*product.Quantity, 0)
