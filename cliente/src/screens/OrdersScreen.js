@@ -47,7 +47,7 @@ const OrdersScreen = () => {
                     <td>{order.Consumer}</td>
                     <td>{order.Status}</td>
                     <td>{order.Date}</td>
-                    <td>{order.Subtotal}</td>
+                    <td>${order.Total}</td>
                     <td>
                       <Link
                         to={`/orders/${order.Number}`}
