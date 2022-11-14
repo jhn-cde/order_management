@@ -65,16 +65,14 @@ const ProductForm = ({prod, onSubmit, title}) => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="status" className="form-label">Status</label>
-              <input
-                type="text" 
-                className="form-control" 
-                id="status"
-                aria-describedby="aria-describedby"
-                name='Status'
-                value={product.Status}
+              <select className="form-select" 
+                name="Status" 
+                value={product.Status} 
                 onChange={handleInputChange}
-              />
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
             </div>
             <button 
               type="submit" 
