@@ -2,18 +2,16 @@ import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
 import { selectOrders } from '../../actions/ordersSlice';
 import { useSelector } from "react-redux";
-import { calculateRange, sliceData } from '../../utils/divideList';
+import { sliceData } from '../../utils/divideList';
+import Pagination from '../ui/Pagination';
 
-const rowsPerPage = 4
+const rowsPerPage = 3
 const OrdersScreen = () => {
   const ordersList = useSelector(selectOrders)
   const [page, setPage] = useState(1)
   const [slice, setSlice] = useState([])
-  const [range, setRange] = useState([])
 
   useEffect(() => {
-    const range = calculateRange(ordersList, rowsPerPage)
-    setRange([...range])
     const slice = sliceData(ordersList, rowsPerPage, page);
     setSlice([...slice]);
   }, [ordersList, page]);
@@ -40,10 +38,10 @@ const OrdersScreen = () => {
           </thead>
           <tbody>
             {
-              slice.map(order => {
+              slice.map((order, index) => {
                 return (
                   <tr key={order.Number}>
-                    <td>{order.Number}</td>
+                    <td>{(page-1)*rowsPerPage + index+1}</td>
                     <td>{order.Consumer}</td>
                     <td>{order.Status}</td>
                     <td>{order.Date}</td>
@@ -63,22 +61,11 @@ const OrdersScreen = () => {
         </table>
       </div>
       <div className='d-flex justify-content-end mb-3'>
-        <nav aria-label="Page navigation example">
-          <ul className="pagination">
-            {
-              range.map(page =>
-                <li className="page-item" key={page}>
-                  <button
-                    className="page-link"
-                    onClick={() => setPage(page)}
-                  >
-                    {page}
-                  </button>
-                </li> 
-              )
-            }
-          </ul>
-        </nav>
+        <Pagination
+          itemList={ordersList} 
+          setPage={setPage} 
+          rowsPerPage={rowsPerPage} 
+        />
       </div>
     </div>
   )
