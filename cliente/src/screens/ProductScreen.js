@@ -24,9 +24,10 @@ const ProductScreen = () => {
       dispatch(edit(product))
       navigate('/products')
     }else{
+      const newId = productsList.length+1
       const newProduct = {
         ...product,
-        id: productsList.length+1
+        id: newId
       }
       dispatch(create(newProduct))
     }
