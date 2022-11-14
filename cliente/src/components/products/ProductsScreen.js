@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { selectProducts } from '../../actions/productsSlice';
+import { deleteProduct, selectProducts } from '../../actions/productsSlice';
 import ProductsTable from '../ui/ProductsTable';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { calculateRange, sliceData } from '../../utils/divideList';
 
 const rowsPerPage = 4
 const ProductsScreen = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const productsList = useSelector(selectProducts)
 
   const [page, setPage] = useState(1)
@@ -20,10 +22,11 @@ const ProductsScreen = () => {
     setSlice([...slice]);
   }, [productsList, page]);
 
-
-  const navigate = useNavigate()
-  const editProduct = (id) => {
+  const editProd = (id) => {
     navigate(`/products/${id}`)
+  }
+  const deleteProd = (id) => {
+    dispatch(deleteProduct({id}))
   }
   return(
     <div className='ProductsScreen'>
@@ -36,7 +39,10 @@ const ProductsScreen = () => {
       <div style={{height: 300}}>
         <ProductsTable 
           productsList={slice}
-          actions={[{name: 'Edit', action: editProduct}]}
+          actions={[
+            {name: 'Edit', action: editProd},
+            {name: 'Delete', action: deleteProd}
+          ]}
         />
       </div>
       <div className='d-flex justify-content-end mb-3'>
