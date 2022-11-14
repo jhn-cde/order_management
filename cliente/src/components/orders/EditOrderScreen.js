@@ -1,36 +1,51 @@
-import React, {useMemo} from 'react'
-import { useNavigate, useParams, Link } from "react-router-dom"
-import { completeOrder, rejectOrder, deleteOrderProduct, selectOrders } from '../../actions/ordersSlice';
+import React, {useMemo, useState} from 'react'
+import { useNavigate, useParams } from "react-router-dom"
+import { deleteOrderProduct, selectOrders, fetchOrders, changeOrderStatus, addOrderProduct } from '../../actions/ordersSlice';
 import { getOrderByNumber } from '../../utils/getOrderByNumber';
 import { useDispatch, useSelector } from "react-redux";
-
+import AddItems from '../ui/AddItems';
+import Taxes from '../ui/Taxes';
 
 const EditOrderScreen = () => {
+  const [addItems, setAddItems] = useState(false)
+  const dispatch = useDispatch() 
+  const navigate = useNavigate()
+
   const { orderid } = useParams()
   const ordersList = useSelector(selectOrders)
   const order = useMemo(() => getOrderByNumber(ordersList, orderid), [orderid, ordersList])
   
   //handle return
-  const navigate = useNavigate()
   const handleReturn = () => {
     navigate(-1)
   }
 
-  //dispatcher
-  const dispatch = useDispatch() 
+  const saveItems = ({products, Subtotal}) =>{
+    setAddItems(!addItems)
+    dispatch(addOrderProduct({
+      Number: Number(orderid),
+      products
+    }))
+    dispatch(fetchOrders())
+  }
 
+  //dispatcher
   const deleteProduct = (productid) => {
     dispatch(deleteOrderProduct({
       Number: Number(orderid), 
       productid: Number(productid)
     }))
+    dispatch(fetchOrders())
   }
   const complete = () => {
-    dispatch(completeOrder({Number: Number(orderid)}))
+    dispatch(changeOrderStatus({Number: Number(orderid), Status:'Completed'}))
+  }
+  const reject = () => {
+    dispatch(changeOrderStatus({Number: Number(orderid), Status:'Rejected'}))
   }
 
-  const reject = () => {
-    dispatch(rejectOrder({Number: Number(orderid)}))
+  if(!order){
+    return <div className="Edit order">Loading...</div>;
   }
 
   return(
@@ -51,102 +66,74 @@ const EditOrderScreen = () => {
           <tbody>
             <tr>
               <td>Customer</td>
-              <td>{order?.Consumer}</td>
+              <td>{order.Consumer}</td>
             </tr>
             <tr>
               <td>Status</td>
-              <td>{order?.Status}</td>
+              <td>{order.Status}</td>
             </tr>
             <tr>
               <td>Date</td>
-              <td>{order?.Date}</td>
+              <td>{order.Date}</td>
             </tr>
           </tbody>
         </table>
       </div>
-
       <div className='row'>
-        <div className='col mb-5'>        
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th scope='col'>N°</th>
-                <th scope='col'>Name</th>
-                <th scope='col'>Quantity</th>
-                <th scope='col'>Unit Price</th>
-                <th scope='col'>Cost</th>
-                <th scope='col'>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                order?.products.map(product => {
-                  return (
-                    <tr key={product.id}>
-                      <td>{product.id}</td>
-                      <td>{product.Name}</td>
-                      <td>{product.Quantity}</td>
-                      <td>${product.Unitprice}</td>
-                      <td>${product.Unitprice*product.Quantity}</td>
-                      <td>
-                        <p
-                          onClick={() => deleteProduct(product.id)}
-                          className='btn btn-link'>Delete
-                        </p>
-                      </td>
-                    </tr>
-                  )
-                })
-              }
-            </tbody>
-          </table>
-          <div className='d-flex justify-content-end mb-4'>
-            <Link to={`/products`} className='btn btn-primary'>
-              Add Item+
-            </Link>
-          </div>
+        <div className='col mb-5'> 
+          {// show items 
+          !addItems&&
+            <>        
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope='col'>N°</th>
+                    <th scope='col'>Name</th>
+                    <th scope='col'>Quantity</th>
+                    <th scope='col'>Unit Price</th>
+                    <th scope='col'>Cost</th>
+                    <th scope='col'>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    order.products.map(product => {
+                      return (
+                        <tr key={product.id}>
+                          <td>{product.id}</td>
+                          <td>{product.Name}</td>
+                          <td>{product.Quantity}</td>
+                          <td>${product.Unitprice}</td>
+                          <td>${product.Unitprice*product.Quantity}</td>
+                          <td>
+                            <p
+                              onClick={() => deleteProduct(product.id)}
+                              className='btn btn-link'>Delete
+                            </p>
+                          </td>
+                        </tr>
+                      )
+                    })
+                  }
+                </tbody>
+              </table>
+              <div className='d-flex justify-content-end mb-4'>
+                <button onClick={() => setAddItems(true)} className='btn btn-primary'>
+                    Add Item+
+                </button>
+              </div>
+            </>
+          }
+        {// edit items 
+          addItems&&
+          <>
+            <hr className="divider"></hr>
+            <AddItems onSaveItems={saveItems} products={[...order.products]}/>
+          </>
+        }
         </div>
-
         <div className="col-lg-4 d-flex justify-content-end">
-          <div className="">
-            <ul className='list-group mb-4'>
-              <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Subtotal <span className="badge text-dark">${order?.Subtotal}</span>
-              </li>
-              <li className='list-group-item align-items-center'>
-                Taxes
-                <ul className='list-group' style={{fontSize: '0.9em'}}>
-                  <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total City Tax <span className="badge text-dark">${order?.Taxes.CityTax}</span>
-                  </li>
-                  <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total County Tax <span className="badge text-dark">${order?.Taxes.CountyTax}</span>
-                  </li>
-                  <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total State Tax <span className="badge text-dark">${order?.Taxes.StateTax}</span>
-                  </li>
-                  <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total Federal Tax <span className="badge text-dark">${order?.Taxes.FederalTax}</span>
-                  </li>
-                </ul>
-              </li>
-              <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Total Taxes <span className="badge text-dark">${order?.TotalTaxes}</span>
-              </li>
-              <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Total <span className="badge text-dark">${order?.Total}</span>
-              </li>
-            </ul>
-            <div className="d-flex justify-content-around mb-3">
-              <button onClick={() => complete({Number: order?.Number})} className='btn btn-success btn-sm me-2'>
-                Complete Order
-              </button>
-
-              <button onClick={reject} className='btn btn-danger btn-sm'>
-                Reject Order
-              </button>
-            </div>
-          </div>
+          <Taxes order={order} complete={complete} reject={reject} />
         </div>
       </div>
     </div>
