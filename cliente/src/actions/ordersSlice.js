@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import axios from 'axios'
 
-
 const initialState = {
   list: [],
   status: 'idle'
@@ -24,36 +23,56 @@ export const ordersSlice = createSlice({
         console.log('error addorder', err)
       })
     },
-    completeOrder: (state, action) => {
-      state.list = state.list.map(item => {
-        item.Status = item.Number === action.payload.Number
-          ? 'Completed'
-          :item.Status
-          return item
-        }
-      )
-    },
-    rejectOrder: (state, action) => {
-      state.list = state.list.map(item => {
-        item.Status = item.Number === action.payload.Number
-          ? 'Rejected'
-          :item.Status
-          return item
-        }
-      )
+    changeOrderStatus: (state, action) => {
+      let order = state.list.find(item => item.Number===action.payload.Number)
+      order.Status = action.payload.Status
+      axios
+        .post('/api/norder/editOrderStatus', order)
+        .then((response) => {
+          console.log(response.data)
+          alert(response.data)
+        })
+        .catch((err) => {
+          console.log('editorderstatus', err)
+        });
     },
     deleteOrderProduct: (state, action) => {
-      state.list = state.list.map(item => {
-        if(item.Number === action.payload.Number){
-          item.products = item.products.filter(product => product.id !== action.payload.productid)
-        }
-        return item
-      })
-    }
+      
+      let order = state.list.find(item => item.Number===action.payload.Number)
+      order.products = order.products.filter(product => product.id !== action.payload.productid)
+      axios
+        .post('/api/norder/editOrderProducts', order)
+        .then((response) => {
+          console.log(response.data)
+          alert(response.data)
+        })
+        .catch((err) => {
+          console.log('editorderstatus', err)
+        });
+    },
+    addOrderProduct: (state, action) => {
+      let order = state.list.find(item => item.Number===action.payload.Number)      
+      order.products = [...action.payload.products]
+
+      axios
+        .post('/api/norder/editOrderProducts', order)
+        .then((response) => {
+          console.log(response.data)
+          alert(response.data)
+        })
+        .catch((err) => {
+          console.log('editorderstatus', err)
+        });
+    },
   }
 })
 
-export const {createOrder, setOrders, completeOrder, rejectOrder, deleteOrderProduct} = ordersSlice.actions
+export const {
+  createOrder, 
+  setOrders, 
+  changeOrderStatus, 
+  deleteOrderProduct, 
+  addOrderProduct} = ordersSlice.actions
 
 export function fetchOrders() {
   return async (dispatch) => {
