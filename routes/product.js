@@ -27,8 +27,9 @@ router.post('/addproduct', (req, res) => {
   })
   newProduct.save((err) => {
     if(!err){
-      res.send('Product added')
+      res.send(`Product ${req.body.Name}, id ${req.body.id} added`)
     }else{
+      console.log(err)
       res.send('err')
     }
   })
