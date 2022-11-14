@@ -25,7 +25,14 @@ export const productsSlice = createSlice({
       })
     },
     edit: (state, action) => {
-      state.list = state.list.map(item => item.id === action.payload.id? action.payload:item)
+      //state.list = state.list.map(item => item.id === action.payload.id? action.payload:item)
+      axios.post('/api/product/editproduct', action.payload)
+      .then(res => {
+        alert(res.data)
+      })
+      .then(err => {
+        console.log(err)
+      })
     }
   },
 })

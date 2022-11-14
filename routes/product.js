@@ -46,13 +46,19 @@ router.get('/getproducts', (req, res) => {
   })
 })
 
-router.post('/getproduct', (req, res) => {
-  ModelProduct.find({idProduct:req.body.id}, (docs, err) => {
+router.post('/editProduct', (req, res) => {
+  
+  const toEdit = {
+    Name: req.body.Name,
+    Category: req.body.Category,
+    Price: req.body.Price,
+    Status: req.body.Status,
+  }
+  ModelProduct.findOneAndUpdate({Number: req.body.id}, toEdit, (err) => {
     if(!err){
-      console.log('success', docs)
-      res.send(docs)
+      res.send('Product edited successfully')
     }else{
-      console.log('error! getproduct ', err)
+      console.log('error! editOrderProducts ', err)
       res.send(err)
     }
   })
