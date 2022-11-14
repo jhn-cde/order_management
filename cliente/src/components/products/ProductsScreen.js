@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { selectProducts } from '../actions/productsSlice';
-import ProductsTable from '../components/ProductsTable';
-import { useAppSelector } from '../hooks';
-import { calculateRange, sliceData } from '../utils/divdeList';
+import { selectProducts } from '../../actions/productsSlice';
+import ProductsTable from '../ui/ProductsTable';
+import { useSelector } from "react-redux";
+import { calculateRange, sliceData } from '../../utils/divideList';
 
 const rowsPerPage = 4
 const ProductsScreen = () => {
-  const productsList = useAppSelector(selectProducts)
+  const productsList = useSelector(selectProducts)
 
   const [page, setPage] = useState(1)
   const [slice, setSlice] = useState([])
@@ -29,7 +29,7 @@ const ProductsScreen = () => {
     <div className='ProductsScreen'>
       <h1 className='mt-3'>Products</h1>
       <div className='d-flex justify-content-end mb-4'>
-        <Link to={`/products/${-1}`} className='btn btn-primary'>
+        <Link to={`/products/create`} className='btn btn-primary'>
           Create Product
         </Link>
       </div>

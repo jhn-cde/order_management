@@ -1,13 +1,13 @@
 import React, {useMemo} from 'react'
 import { useNavigate, useParams, Link } from "react-router-dom"
-import { completeOrder, rejectOrder, deleteOrderProduct, selectOrders } from '../actions/ordersSlice';
-import { getOrderByNumber } from '../utils/getOrderByNumber';
-import { useAppDispatch, useAppSelector } from '../hooks';
+import { completeOrder, rejectOrder, deleteOrderProduct, selectOrders } from '../../actions/ordersSlice';
+import { getOrderByNumber } from '../../utils/getOrderByNumber';
+import { useDispatch, useSelector } from "react-redux";
 
 
 const EditOrderScreen = () => {
   const { orderid } = useParams()
-  const ordersList = useAppSelector(selectOrders)
+  const ordersList = useSelector(selectOrders)
   const order = useMemo(() => getOrderByNumber(ordersList, orderid), [orderid, ordersList])
   
   //handle return
@@ -17,7 +17,7 @@ const EditOrderScreen = () => {
   }
 
   //dispatcher
-  const dispatch = useAppDispatch() 
+  const dispatch = useDispatch() 
 
   const deleteProduct = (productid) => {
     dispatch(deleteOrderProduct({
@@ -51,15 +51,15 @@ const EditOrderScreen = () => {
           <tbody>
             <tr>
               <td>Customer</td>
-              <td>{order.Consumer}</td>
+              <td>{order?.Consumer}</td>
             </tr>
             <tr>
               <td>Status</td>
-              <td>{order.Status}</td>
+              <td>{order?.Status}</td>
             </tr>
             <tr>
               <td>Date</td>
-              <td>{order.Date}</td>
+              <td>{order?.Date}</td>
             </tr>
           </tbody>
         </table>
@@ -80,7 +80,7 @@ const EditOrderScreen = () => {
             </thead>
             <tbody>
               {
-                order.products.map(product => {
+                order?.products.map(product => {
                   return (
                     <tr key={product.id}>
                       <td>{product.id}</td>
@@ -111,34 +111,34 @@ const EditOrderScreen = () => {
           <div className="">
             <ul className='list-group mb-4'>
               <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Subtotal <span className="badge text-dark">${order.Subtotal}</span>
+                Subtotal <span className="badge text-dark">${order?.Subtotal}</span>
               </li>
               <li className='list-group-item align-items-center'>
                 Taxes
                 <ul className='list-group' style={{fontSize: '0.9em'}}>
                   <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total City Tax <span className="badge text-dark">${order.Taxes.CityTax}</span>
+                    Total City Tax <span className="badge text-dark">${order?.Taxes.CityTax}</span>
                   </li>
                   <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total County Tax <span className="badge text-dark">${order.Taxes.CountyTax}</span>
+                    Total County Tax <span className="badge text-dark">${order?.Taxes.CountyTax}</span>
                   </li>
                   <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total State Tax <span className="badge text-dark">${order.Taxes.StateTax}</span>
+                    Total State Tax <span className="badge text-dark">${order?.Taxes.StateTax}</span>
                   </li>
                   <li className='list-group-item d-flex justify-content-between align-items-center'>
-                    Total Federal Tax <span className="badge text-dark">${order.Taxes.FederalTax}</span>
+                    Total Federal Tax <span className="badge text-dark">${order?.Taxes.FederalTax}</span>
                   </li>
                 </ul>
               </li>
               <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Total Taxes <span className="badge text-dark">${order.TotalTaxes}</span>
+                Total Taxes <span className="badge text-dark">${order?.TotalTaxes}</span>
               </li>
               <li className='list-group-item d-flex justify-content-between align-items-center'>
-                Total <span className="badge text-dark">${order.Total}</span>
+                Total <span className="badge text-dark">${order?.Total}</span>
               </li>
             </ul>
             <div className="d-flex justify-content-around mb-3">
-              <button onClick={() => complete({Number: order.Number})} className='btn btn-success btn-sm me-2'>
+              <button onClick={() => complete({Number: order?.Number})} className='btn btn-success btn-sm me-2'>
                 Complete Order
               </button>
 

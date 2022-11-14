@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
-import { selectOrders } from '../actions/ordersSlice';
-import { useAppSelector } from '../hooks';
-import { calculateRange, sliceData } from '../utils/divdeList';
+import { selectOrders } from '../../actions/ordersSlice';
+import { useSelector } from "react-redux";
+import { calculateRange, sliceData } from '../../utils/divideList';
 
 const rowsPerPage = 4
 const OrdersScreen = () => {
-  const ordersList = useAppSelector(selectOrders)
+  const ordersList = useSelector(selectOrders)
   const [page, setPage] = useState(1)
   const [slice, setSlice] = useState([])
   const [range, setRange] = useState([])

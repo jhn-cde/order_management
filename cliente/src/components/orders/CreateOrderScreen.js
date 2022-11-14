@@ -1,11 +1,11 @@
-import { useForm } from "../hooks/useForm"
+import { useForm } from "../../hooks/useForm"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import ProductsTable from "../components/ProductsTable";
-import { useAppSelector, useAppDispatch } from "../hooks";
-import { selectProducts } from "../actions/productsSlice";
+import ProductsTable from "../ui/ProductsTable";
+import { useDispatch, useSelector } from "react-redux";
+import { selectProducts } from "../../actions/productsSlice";
 import { useState } from "react";
-import { createOrder, fetchOrders, selectOrders } from "../actions/ordersSlice";
+import { createOrder, fetchOrders, selectOrders } from "../../actions/ordersSlice";
 
 
 const CreateOrderScreen = () => {
@@ -16,10 +16,10 @@ const CreateOrderScreen = () => {
     Subtotal: 0,
   })
 
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
-  const productsList = useAppSelector(selectProducts)
-  const ordersList = useAppSelector(selectOrders)
+  const productsList = useSelector(selectProducts)
+  const ordersList = useSelector(selectOrders)
 
   const [addedProducts, setAddedProducts] = useState([])
 

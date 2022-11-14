@@ -1,44 +1,16 @@
-import React, {useMemo} from 'react'
-import { useNavigate, useParams } from "react-router-dom"
-import { selectProducts, create, edit, fetchProducts } from '../actions/productsSlice'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import { useForm } from '../hooks/useForm'
-import getProductById from '../utils/getProductById'
+import React from 'react'
+import { useNavigate } from "react-router-dom"
+import { useForm } from '../../hooks/useForm'
 
-const ProductScreen = () => {
-  const productsList = useAppSelector(selectProducts)
-  const { productid } = useParams()
+const ProductForm = ({prod, onSubmit, title}) => {
+  const navigate = useNavigate()
+  const [product, handleInputChange] = useForm(prod)
 
-  const prod = useMemo(() => getProductById(productsList, productid), [productid, productsList])
-  const [product, handleInputChange] = useForm(prod? prod: {  id: Number,
-    Name: '',
-    Category: '',
-    Price: 0,
-    Status: 'Active'
-  })
-  
-  const dispatch = useAppDispatch()
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    // create new product
-    if(productid !== '-1'){
-      dispatch(edit(product))
-      dispatch(fetchProducts())
-      navigate('/products')
-    }
-    // edit product
-    else{
-      const newId = productsList.length+1
-      const newProduct = {
-        ...product,
-        id: newId
-      }
-      dispatch(create(newProduct))
-    }
+    onSubmit(product)
   }
 
-  const navigate = useNavigate()
   const handleReturn = () => {
     navigate(-1)
   }
@@ -48,7 +20,7 @@ const ProductScreen = () => {
       <div className="row mt-4 justify-content-center">
         <div className="col-sm-6 ">
           <div className="d-flex justify-content-between mb-4 mt-4">
-            <h2>Product{(productid!=='-1')&&' N°'+productid}</h2>
+            <h2>{title}</h2>
             <div>
               <button onClick={handleReturn} className='btn btn-secondary'>
                 Back
@@ -117,4 +89,4 @@ const ProductScreen = () => {
   )
 }
 
-export default ProductScreen
+export default ProductForm

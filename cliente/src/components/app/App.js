@@ -1,11 +1,11 @@
 import AppRouter from "./AppRouter";
-import { useAppDispatch } from "./hooks";
-import { fetchProducts } from "./actions/productsSlice";
+import { useDispatch } from "react-redux";
+import { fetchProducts } from "../../actions/productsSlice";
 import { useEffect } from "react";
-import { fetchOrders } from './actions/ordersSlice';
+import { fetchOrders } from '../../actions/ordersSlice';
 
 function App() {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(fetchProducts())
