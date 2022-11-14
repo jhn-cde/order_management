@@ -6,7 +6,6 @@ import getProductById from '../../utils/getProductById'
 import ProductForm from './ProductForm';
 
 const EditProductScreen = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { productid } = useParams()
 
