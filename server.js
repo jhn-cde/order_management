@@ -7,6 +7,7 @@ const archivoBD = require('./connection')
 // importar el archivo de rutas
 const routeProduct = require('./routes/product')
 const routeOrder = require('./routes/order')
+const routeNorder = require('./routes/norder')
 
 //body parser
 const bodyParser = require('body-parser')
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({extended:'true'}))
 
 app.use('/api/product', routeProduct)
 app.use('/api/order', routeOrder)
+app.use('/api/norder', routeNorder)
 
 app.get('/', (req, res) => {
   res.end('Hello world')
