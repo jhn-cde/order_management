@@ -11,25 +11,38 @@ export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
   reducers: {
-    initOrders: (state, action) => {
+    setOrders: (state, action) => {
       state.list = action.payload
     },
-    create: (state, action) => {
-      console.log('addorder', action.payload)
+    createOrder: (state, action) => {
       state.list = [...state.list, action.payload]
-      axios.post('/api/order/addorder', action.payload)
+      axios.post('/api/norder/addorder', action.payload)
       .then(res => {
-        console.log(res)
         alert(res.data)
       })
       .then(err => {
         console.log('error addorder', err)
       })
     },
-    edit: (state, action) => {
-      state.list = state.list.map(item => item.Number === action.payload.Number? action.payload:item)
+    completeOrder: (state, action) => {
+      state.list = state.list.map(item => {
+        item.Status = item.Number === action.payload.Number
+          ? 'Completed'
+          :item.Status
+          return item
+        }
+      )
     },
-    deleteProduct: (state, action) => {
+    rejectOrder: (state, action) => {
+      state.list = state.list.map(item => {
+        item.Status = item.Number === action.payload.Number
+          ? 'Rejected'
+          :item.Status
+          return item
+        }
+      )
+    },
+    deleteOrderProduct: (state, action) => {
       state.list = state.list.map(item => {
         if(item.Number === action.payload.Number){
           item.products = item.products.filter(product => product.id !== action.payload.productid)
@@ -37,10 +50,24 @@ export const ordersSlice = createSlice({
         return item
       })
     }
-  },
+  }
 })
 
-export const {create, initOrders} = ordersSlice.actions
+export const {createOrder, setOrders, completeOrder, rejectOrder, deleteOrderProduct} = ordersSlice.actions
+
+export function fetchOrders() {
+  return async (dispatch) => {
+    axios
+      .get('/api/norder/getorders')
+      .then((response) => {
+        dispatch(setOrders(response.data));
+      })
+      .catch((err) => {
+        console.log('fetchorders', err)
+        dispatch(setOrders([]));
+      });
+  };
+}
 
 export const selectOrders = (state) => state.orders.list
 

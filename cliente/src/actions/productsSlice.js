@@ -7,12 +7,11 @@ const initialState = {
   status: 'idle'
 }
 
-
 export const productsSlice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    initProducts: (state, action) => {
+    setProducts: (state, action) => {
       state.list = action.payload
     },
     create: (state, action) => {
@@ -31,7 +30,21 @@ export const productsSlice = createSlice({
   },
 })
 
-export const {create, edit, initProducts} = productsSlice.actions
+export const {create, edit, setProducts} = productsSlice.actions
+
+export function fetchProducts() {
+  return async (dispatch) => {
+    axios
+      .get('/api/product/getproducts')
+      .then((response) => {
+        dispatch(setProducts(response.data));
+      })
+      .catch((err) => {
+        console.log('fetchproducts', err)
+        dispatch(setProducts([]));
+      });
+  };
+}
 
 export const selectProducts = (state) => state.products.list
 
