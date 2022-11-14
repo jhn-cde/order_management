@@ -27,7 +27,7 @@ router.post('/addproduct', (req, res) => {
   })
   newProduct.save((err) => {
     if(!err){
-      res.send(`Product ${req.body.Name}, id ${req.body.id} added`)
+      res.send(`Product ${req.body.Name}, id: ${req.body.id} added`)
     }else{
       console.log(err)
       res.send('err')
@@ -59,6 +59,17 @@ router.post('/editProduct', (req, res) => {
       res.send('Product edited successfully')
     }else{
       console.log('error! editOrderProducts ', err)
+      res.send(err)
+    }
+  })
+})
+
+router.post('/deleteproduct', (req, res) => {
+  ModelProduct.findOneAndDelete({id:req.body.id}, (err) => {
+    if(!err){
+      res.send(`Product id: ${req.body.id} deleted`)
+    }else{
+      console.log('error! deleteproduct ', err)
       res.send(err)
     }
   })
