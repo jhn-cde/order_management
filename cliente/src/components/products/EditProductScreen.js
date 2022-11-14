@@ -1,22 +1,21 @@
 import React, {useMemo} from 'react'
 import { useNavigate, useParams } from "react-router-dom"
-import { selectProducts, edit } from '../../actions/productsSlice'
+import { selectProducts, edit, fetchProducts } from '../../actions/productsSlice'
 import { useDispatch, useSelector } from "react-redux";
 import getProductById from '../../utils/getProductById'
 import ProductForm from './ProductForm';
 
 const EditProductScreen = () => {
-  const productsList = useSelector(selectProducts)
-  const { productid } = useParams()
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
+  const { productid } = useParams()
+
+  const productsList = useSelector(selectProducts)
   const prod = useMemo(() => getProductById(productsList, productid), [productid, productsList])
 
   const onSubmit = (product) => {
-    console.log(product)
     dispatch(edit(product))
-    navigate('/products')
+    dispatch(fetchProducts())
   }
 
   if(!prod){
