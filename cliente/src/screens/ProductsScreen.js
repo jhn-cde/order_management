@@ -1,11 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { selectProducts } from '../actions/productsSlice';
 import ProductsTable from '../components/ProductsTable';
 import { useAppSelector } from '../hooks';
+import { calculateRange, sliceData } from '../utils/divdeList';
 
+const rowsPerPage = 4
 const ProductsScreen = () => {
   const productsList = useAppSelector(selectProducts)
+
+  const [page, setPage] = useState(1)
+  const [slice, setSlice] = useState([])
+  const [range, setRange] = useState([])
+
+  useEffect(() => {
+    const range = calculateRange(productsList, rowsPerPage)
+    setRange([...range])
+    const slice = sliceData(productsList, rowsPerPage, page);
+    setSlice([...slice]);
+  }, [productsList, page]);
+
 
   const navigate = useNavigate()
   const editProduct = (id) => {
@@ -19,11 +33,30 @@ const ProductsScreen = () => {
           Create Product
         </Link>
       </div>
-
-      <ProductsTable 
-        productsList={productsList}
-        actions={[{name: 'Edit', action: editProduct}]}
-      />
+      <div style={{height: 300}}>
+        <ProductsTable 
+          productsList={slice}
+          actions={[{name: 'Edit', action: editProduct}]}
+        />
+      </div>
+      <div className='d-flex justify-content-end mb-3'>
+        <nav aria-label="Page navigation example">
+          <ul className="pagination">
+            {
+              range.map(page =>
+                <li className="page-item" key={page}>
+                  <button
+                    className="page-link"
+                    onClick={() => setPage(page)}
+                  >
+                    {page}
+                  </button>
+                </li> 
+              )
+            }
+          </ul>
+        </nav>
+      </div>
     </div>
   )
 }
