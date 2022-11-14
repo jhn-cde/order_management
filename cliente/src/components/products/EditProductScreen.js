@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import { useNavigate, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { selectProducts, edit, fetchProducts } from '../../actions/productsSlice'
 import { useDispatch, useSelector } from "react-redux";
 import getProductById from '../../utils/getProductById'
