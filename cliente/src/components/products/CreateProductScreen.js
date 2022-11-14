@@ -1,22 +1,27 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom"
-import { create } from '../../actions/productsSlice'
-import { useDispatch } from "react-redux";
+import { create, selectProducts } from '../../actions/productsSlice'
+import { useDispatch, useSelector } from "react-redux";
 import ProductForm from './ProductForm';
 
 const CreateProductScreen = () => {
+  const productsList = useSelector(selectProducts)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const onSubmit = (product) => {
-    dispatch(create(product))
+    const newProduct = {
+      ...product,
+      id: productsList.length!==0?Math.max(...productsList.map(o => o.id))+1:1
+    }
+    dispatch(create(newProduct))
     navigate('/products')
   }
 
   return(
     <div className='create product'>
       <ProductForm
-        prod={{  id: Number,
+        prod={{
           Name: '',
           Category: '',
           Price: 0,
