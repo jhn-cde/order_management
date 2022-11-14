@@ -5,7 +5,7 @@ import ProductsTable from "../components/ProductsTable";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { selectProducts } from "../actions/productsSlice";
 import { useState } from "react";
-import { createOrder, selectOrders } from "../actions/ordersSlice";
+import { createOrder, fetchOrders, selectOrders } from "../actions/ordersSlice";
 
 
 const CreateOrderScreen = () => {
@@ -35,6 +35,7 @@ const CreateOrderScreen = () => {
     handleInputChange({target:{name:'Subtotal', value:order.Subtotal + product.Price}})
     setAddedProducts([...addedProducts, toadd])
   }
+  
   const changeQuantity = ({value, productid}) => {
     const addedList = addedProducts.map(p => {
       p.Quantity = productid===p.id? value: p.Quantity
@@ -51,6 +52,7 @@ const CreateOrderScreen = () => {
     handleInputChange({target:{name:'Subtotal', value:subTotal}})
   }
 
+  // create new order
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log(ordersList.length)
@@ -61,6 +63,7 @@ const CreateOrderScreen = () => {
       Date: order.Date.toLocaleDateString()
     }
     dispatch(createOrder(newOrder))
+    dispatch(fetchOrders())
   }
 
   return(

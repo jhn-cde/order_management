@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react'
 import { useNavigate, useParams } from "react-router-dom"
-import { selectProducts, create, edit } from '../actions/productsSlice'
+import { selectProducts, create, edit, fetchProducts } from '../actions/productsSlice'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { useForm } from '../hooks/useForm'
 import getProductById from '../utils/getProductById'
@@ -20,10 +20,15 @@ const ProductScreen = () => {
   const dispatch = useAppDispatch()
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    // create new product
     if(productid !== '-1'){
       dispatch(edit(product))
+      dispatch(fetchProducts())
       navigate('/products')
-    }else{
+    }
+    // edit product
+    else{
       const newId = productsList.length+1
       const newProduct = {
         ...product,
