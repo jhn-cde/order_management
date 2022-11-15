@@ -1,17 +1,5 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchSlice, selectSlice } from "../../actions/productsSlice"
-import Pagination from "./Pagination"
+const ProductsTable = ({slice, actions}) => {
 
-const ProductsTable = ({productsList, actions, rowsPerPage=5}) => {
-  const dispatch = useDispatch()
-  const [page, setPage] = useState(1)
-  const slice = useSelector(selectSlice)
-
-  useEffect(() => {
-    dispatch(fetchSlice({page:page-1, rowsPerPage}))
-  }, [page, rowsPerPage, dispatch]);
-  
   if(slice.length===0){
     return <div className="Edit order">Loading...</div>;
   }
@@ -52,9 +40,6 @@ const ProductsTable = ({productsList, actions, rowsPerPage=5}) => {
           }
         </tbody>
       </table>
-      <div className='d-flex justify-content-end mb-3'>
-        <Pagination itemList={productsList} setPage={setPage} rowsPerPage={rowsPerPage}/>
-      </div>
     </div>
   )
 }
