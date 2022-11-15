@@ -5,7 +5,7 @@
       "use": "@vercel/node"
     }
   ],
-  "headers": [
+  "routes": [
     {
       "src": "/(.*)",
       "headers": [
