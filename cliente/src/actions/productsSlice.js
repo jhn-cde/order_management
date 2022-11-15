@@ -8,6 +8,15 @@ const initialState = {
   status: 'idle'
 }
 
+const api = axios.create({
+  baseURL: "https://order-management-jhn-cde.vercel.app/",
+  withCredentials: false,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
+
 export const productsSlice = createSlice({
   name: 'products',
   initialState,
@@ -20,7 +29,7 @@ export const productsSlice = createSlice({
     },
     create: (state, action) => {
       state.list = [...state.list, action.payload]
-      axios.post('/api/product/addproduct', action.payload)
+      api.post('/api/product/addproduct', action.payload)
       .then(res => {
         alert(res.data)
       })
@@ -29,7 +38,7 @@ export const productsSlice = createSlice({
       })
     },
     edit: (state, action) => {
-      axios.post('/api/product/editproduct', action.payload)
+      api.post('/api/product/editproduct', action.payload)
       .then(res => {
         alert(res.data)
       })
@@ -38,7 +47,7 @@ export const productsSlice = createSlice({
       })
     },
     deleteProduct: (state, action) => {
-      axios.post('/api/product/deleteproduct', action.payload)
+      api.post('/api/product/deleteproduct', action.payload)
       .then(res => {
         alert(res.data)
       })
@@ -58,7 +67,7 @@ export const {
 
 export function fetchProducts() {
   return async (dispatch) => {
-    axios
+    api
       .get('/api/product/getproducts')
       .then((response) => {
         dispatch(setProducts(response.data));
@@ -71,7 +80,7 @@ export function fetchProducts() {
 }
 export function fetchSlice({page, rowsPerPage, searchtext}) {
   return async (dispatch) => {
-    axios
+    api
       .get('/api/product/getproductsslice', {
         params: {page, rowsPerPage, searchtext}})
       .then((response) => {
