@@ -7,6 +7,15 @@ const initialState = {
   status: 'idle'
 }
 
+const api = axios.create({
+  baseURL: "https://order-management-jhn-cde.vercel.app/",
+  withCredentials: false,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+});
+
 export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
@@ -19,7 +28,7 @@ export const ordersSlice = createSlice({
     },
     createOrder: (state, action) => {
       state.list = [...state.list, action.payload]
-      axios.post('/api/norder/addorder', action.payload)
+      api.post('/api/norder/addorder', action.payload)
       .then(res => {
         alert(res.data)
       })
@@ -30,7 +39,7 @@ export const ordersSlice = createSlice({
     changeOrderStatus: (state, action) => {
       let order = state.list.find(item => item.Number===action.payload.Number)
       order.Status = action.payload.Status
-      axios
+      api
         .post('/api/norder/editOrderStatus', order)
         .then((response) => {
           console.log(response.data)
@@ -44,7 +53,7 @@ export const ordersSlice = createSlice({
       
       let order = state.list.find(item => item.Number===action.payload.Number)
       order.products = order.products.filter(product => product.id !== action.payload.productid)
-      axios
+      api
         .post('/api/norder/editOrderProducts', order)
         .then((response) => {
           console.log(response.data)
@@ -58,7 +67,7 @@ export const ordersSlice = createSlice({
       let order = state.list.find(item => item.Number===action.payload.Number)      
       order.products = [...action.payload.products]
 
-      axios
+      api
         .post('/api/norder/editOrderProducts', order)
         .then((response) => {
           console.log(response.data)
@@ -81,7 +90,7 @@ export const {
 
 export function fetchOrders() {
   return async (dispatch) => {
-    axios
+    api
       .get('/api/norder/getorders')
       .then((response) => {
         dispatch(setOrders(response.data));
@@ -94,7 +103,7 @@ export function fetchOrders() {
 }
 export function fetchOrdersSlice({page, rowsPerPage, searchtext}) {
   return async (dispatch) => {
-    axios
+    api
       .get('/api/norder/getordersslice', {
         params: {page, rowsPerPage, searchtext}})
       .then((response) => {
