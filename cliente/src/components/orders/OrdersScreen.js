@@ -1,22 +1,28 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
-import { selectOrders } from '../actions/ordersSlice';
-import { useAppSelector } from '../hooks';
-import { calculateRange, sliceData } from '../utils/divdeList';
+import { fetchOrdersSlice, selectOrders, selectSlice } from '../../actions/ordersSlice';
+import { useDispatch, useSelector } from "react-redux";
+import Pagination from '../ui/Pagination';
+import Search from '../ui/Search';
 
 const rowsPerPage = 4
 const OrdersScreen = () => {
-  const ordersList = useAppSelector(selectOrders)
+  const dispatch = useDispatch()
+  const ordersList = useSelector(selectOrders)
   const [page, setPage] = useState(1)
-  const [slice, setSlice] = useState([])
-  const [range, setRange] = useState([])
+  const slice = useSelector(selectSlice)
 
   useEffect(() => {
-    const range = calculateRange(ordersList, rowsPerPage)
-    setRange([...range])
-    const slice = sliceData(ordersList, rowsPerPage, page);
-    setSlice([...slice]);
-  }, [ordersList, page]);
+    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage, searchtext:''}))
+  }, [page, dispatch]);
+
+  const handleSearch = (searchtext) => {
+    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage, searchtext}))
+  }
+
+  if(slice.length===0){
+    return <div className="Edit order">Loading...</div>;
+  }
 
   return(
     <div className='ProductsScreen'>
@@ -25,6 +31,12 @@ const OrdersScreen = () => {
         <Link to={`/orders/create`} className='btn btn-primary'>
           Create Order
         </Link>
+      </div>
+
+      <div className='d-flex justify-content-end'>
+        <div style={{width: 200}}>
+          <Search handleSearch={handleSearch}/>
+        </div>
       </div>
       <div style={{height: 300}}>
         <table className="table table-striped">
@@ -40,14 +52,14 @@ const OrdersScreen = () => {
           </thead>
           <tbody>
             {
-              slice.map(order => {
+              slice.map((order, index) => {
                 return (
                   <tr key={order.Number}>
                     <td>{order.Number}</td>
                     <td>{order.Consumer}</td>
                     <td>{order.Status}</td>
                     <td>{order.Date}</td>
-                    <td>{order.Subtotal}</td>
+                    <td>${order.Total}</td>
                     <td>
                       <Link
                         to={`/orders/${order.Number}`}
@@ -63,22 +75,11 @@ const OrdersScreen = () => {
         </table>
       </div>
       <div className='d-flex justify-content-end mb-3'>
-        <nav aria-label="Page navigation example">
-          <ul className="pagination">
-            {
-              range.map(page =>
-                <li className="page-item" key={page}>
-                  <button
-                    className="page-link"
-                    onClick={() => setPage(page)}
-                  >
-                    {page}
-                  </button>
-                </li> 
-              )
-            }
-          </ul>
-        </nav>
+        <Pagination
+          itemList={ordersList} 
+          setPage={setPage} 
+          rowsPerPage={rowsPerPage} 
+        />
       </div>
     </div>
   )
