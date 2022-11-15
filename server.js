@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 
-const whiteList = ['https://jhn-cde.github.io/order_management/']
+const whiteList = ['https://jhn-cde.github.io/']
 
 app.use(cors({origin: whiteList})) //allow everywhere
 
