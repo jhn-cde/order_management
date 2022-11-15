@@ -11,6 +11,7 @@ const Search = ({handleSearch}) => {
     handleSearch(value.searchtext)
   }
 
+  //if searchtext empty, call parent handleSearch
   const onChange = (e) => {
     handleInputChange(e)
     if(e.target.value === '')

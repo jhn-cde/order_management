@@ -11,6 +11,7 @@ const AddItems = ({children, onSaveItems, products=[]}) => {
   const [addedProducts, setAddedProducts] = useState(products)
   const [subTotal, setSubTotal] = useState(0)
 
+  // get product and adds to addedProducts
   const addProduct = (productid) => {
     const product = productsList.filter(p => p.id === productid)[0]
     const toadd = {
@@ -24,6 +25,7 @@ const AddItems = ({children, onSaveItems, products=[]}) => {
     setAddedProducts([...addedProducts, toadd])
   }
   
+  // updates addedProducts, changes product quantity
   const changeQuantity = ({value, productid}) => {
     const addedList = addedProducts.map(p => {
       let tmp = {...p}
@@ -35,6 +37,7 @@ const AddItems = ({children, onSaveItems, products=[]}) => {
     setSubTotal(tmpSubTotal)
   }
 
+  //filter addeProducts, remove productid
   const removeProduct = (productid) => {
     const addedList = addedProducts.filter(p => p.id !== productid)
     setAddedProducts(addedList)

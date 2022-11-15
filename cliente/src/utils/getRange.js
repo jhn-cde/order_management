@@ -1,4 +1,4 @@
-export const calculateRange = (data, rowsPerPage) => {
+export const getRange = (data, rowsPerPage) => {
   const range = [];
   const num = Math.ceil(data.length / rowsPerPage);
   
