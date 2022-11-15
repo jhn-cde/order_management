@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom"
 import { selectProducts, edit, fetchProducts } from '../../actions/productsSlice'
 import { useDispatch, useSelector } from "react-redux";
 import getProductById from '../../utils/getProductById'
-import ProductForm from './ProductForm';
+import ProductForm from '../ui/ProductForm';
 
 const EditProductScreen = () => {
   const dispatch = useDispatch()
@@ -26,7 +26,7 @@ const EditProductScreen = () => {
       <ProductForm
         prod={prod}
         onSubmit={onSubmit}
-        title={'New Product'}
+        title={`Edit Product id-${productid}`}
       />
     </div>
   )
