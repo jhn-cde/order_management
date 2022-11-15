@@ -89,7 +89,13 @@ const AddItems = ({children, onSaveItems, products=[]}) => {
       <div className="mb-3 mt-3">
         <h3>Products</h3>
         <ProductsTable
-          slice={productsList.filter(p => !addedProducts.find(added => added.id === p.id))}
+          slice={
+            productsList.filter(p => 
+              !addedProducts.find(added => 
+                added.id === p.id
+              ) && p.Status==='Active'
+            )
+          }
           rowsPerPage={3}
           actions={[{name:'Add', action: addProduct}]}
         />
