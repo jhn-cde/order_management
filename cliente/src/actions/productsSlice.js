@@ -69,11 +69,11 @@ export function fetchProducts() {
       });
   };
 }
-export function fetchSlice({page, rowsPerPage}) {
+export function fetchSlice({page, rowsPerPage, searchtext}) {
   return async (dispatch) => {
     axios
       .get('/api/product/getproductsslice', {
-        params: {page, rowsPerPage}})
+        params: {page, rowsPerPage, searchtext}})
       .then((response) => {
         dispatch(setSlice(response.data));
       })

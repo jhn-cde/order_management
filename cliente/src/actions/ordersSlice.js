@@ -92,11 +92,11 @@ export function fetchOrders() {
       });
   };
 }
-export function fetchOrdersSlice({page, rowsPerPage}) {
+export function fetchOrdersSlice({page, rowsPerPage, searchtext}) {
   return async (dispatch) => {
     axios
       .get('/api/norder/getordersslice', {
-        params: {page, rowsPerPage}})
+        params: {page, rowsPerPage, searchtext}})
       .then((response) => {
         dispatch(setSlice(response.data));
       })

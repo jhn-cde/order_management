@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { fetchOrdersSlice, selectOrders, selectSlice } from '../../actions/ordersSlice';
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from '../ui/Pagination';
+import Search from '../ui/Search';
 
 const rowsPerPage = 4
 const OrdersScreen = () => {
@@ -12,8 +13,12 @@ const OrdersScreen = () => {
   const slice = useSelector(selectSlice)
 
   useEffect(() => {
-    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage}))
+    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage, searchtext:''}))
   }, [page, dispatch]);
+
+  const handleSearch = (searchtext) => {
+    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage, searchtext}))
+  }
 
   if(slice.length===0){
     return <div className="Edit order">Loading...</div>;
@@ -26,6 +31,12 @@ const OrdersScreen = () => {
         <Link to={`/orders/create`} className='btn btn-primary'>
           Create Order
         </Link>
+      </div>
+
+      <div className='d-flex justify-content-end'>
+        <div style={{width: 200}}>
+          <Search handleSearch={handleSearch}/>
+        </div>
       </div>
       <div style={{height: 300}}>
         <table className="table table-striped">

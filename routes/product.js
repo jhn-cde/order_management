@@ -33,15 +33,22 @@ router.get('/getproducts', (req, res) => {
 })
 
 router.get('/getproductsslice', (req, res) => {
-  let query ={
-    skip: req.query.page * req.query.rowsPerPage,
-    limit: req.query.rowsPerPage
+  const query ={
+    pag: {
+      skip: req.query.page * req.query.rowsPerPage,
+      limit: req.query.rowsPerPage
+    },
+    search: {
+      Name: {$regex: `.*${req.query.searchtext}.*`, $options: 'i'}
+    }
   }
-  ModelProduct.find({}, null, query, (docs, err) => {
+  
+  ModelProduct.find(query.search, {}, query.pag, (err, docs) => {
     if(!err){
       res.send(docs)
     }else{
-      res.send(err)
+      console.log(err)
+      res.send([])
     }
   }).sort({id:1})
 })

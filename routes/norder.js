@@ -72,11 +72,16 @@ router.post('/editOrderStatus', (req, res) => {
 })
 
 router.get('/getordersslice', (req, res) => {
-  let query ={
-    skip: req.query.page * req.query.rowsPerPage,
-    limit: req.query.rowsPerPage
+  const query ={
+    pag: {
+      skip: req.query.page * req.query.rowsPerPage,
+      limit: req.query.rowsPerPage
+    },
+    search: {
+      Consumer: {$regex: `.*${req.query.searchtext}.*`, $options: 'i'}
+    }
   }
-  ModelOrder.find({}, null, query, (docs, err) => {
+  ModelOrder.find(query.search, {}, query.pag, (docs, err) => {
     if(!err){
       res.send(docs)
     }else{
