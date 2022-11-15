@@ -29,8 +29,9 @@ router.get('/getproducts', (req, res) => {
     }else{
       res.send(err)
     }
-  })
+  }).sort({id:1})
 })
+
 router.get('/getproductsslice', (req, res) => {
   let query ={
     skip: req.query.page * req.query.rowsPerPage,
@@ -42,7 +43,7 @@ router.get('/getproductsslice', (req, res) => {
     }else{
       res.send(err)
     }
-  })
+  }).sort({id:1})
 })
 
 router.post('/editProduct', (req, res) => {

@@ -27,7 +27,6 @@ const getTaxes = (Subtotal) => {
   return {Taxes, TotalTaxes, Total}
 }
 
-
 router.post('/addorder', (req, res) => {
   const Taxes = getTaxes(req.body.Subtotal)
   const newOrder = ModelOrder({
@@ -69,7 +68,7 @@ router.post('/editOrderStatus', (req, res) => {
       console.log('error! editOrderStatus ', err)
       res.send(err)
     }
-  })
+  }).sort({Number:1})
 })
 
 router.get('/getordersslice', (req, res) => {
@@ -83,7 +82,7 @@ router.get('/getordersslice', (req, res) => {
     }else{
       res.send(err)
     }
-  })
+  }).sort({Number:1})
 })
 
 router.post('/editOrderProducts', (req, res) => {
