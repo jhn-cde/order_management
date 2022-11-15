@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from "react-router-dom"
 import { create, selectProducts } from '../../actions/productsSlice'
 import { useDispatch, useSelector } from "react-redux";
-import ProductForm from './ProductForm';
+import ProductForm from '../ui/ProductForm';
 
 const CreateProductScreen = () => {
   const productsList = useSelector(selectProducts)
