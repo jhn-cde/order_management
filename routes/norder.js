@@ -1,28 +1,7 @@
 const express = require('express')
-
+const ModelOrder = require('../models/order')
 const router = express.Router()
 
-const mongoose = require('mongoose')
-const scheme = mongoose.Schema
-
-const schemeOrder = new scheme({
-  Number: Number,
-  Status: String,
-  Date: String,
-  Consumer: String,
-  Subtotal: Number,
-  Taxes: {
-    CityTax: Number,
-    CountyTax: Number,
-    StateTax: Number,
-    FederalTax: Number
-  },
-  TotalTaxes: Number,
-  Total: Number,
-  products: []
-})
-
-const ModelOrder = mongoose.model('norders', schemeOrder)
 module.exports = router
 
 const getTaxes = (Subtotal) => {
@@ -71,7 +50,6 @@ router.post('/addorder', (req, res) => {
 })
 
 router.get('/getorders', (req, res) => {
-  console.log('getorders')
   ModelOrder.find({}, (err, docs) => {
     if(!err){
       res.send(docs)
@@ -89,6 +67,20 @@ router.post('/editOrderStatus', (req, res) => {
       res.send(`Status changed successfully, ${req.body.Status}`)
     }else{
       console.log('error! editOrderStatus ', err)
+      res.send(err)
+    }
+  })
+})
+
+router.get('/getordersslice', (req, res) => {
+  let query ={
+    skip: req.query.page * req.query.rowsPerPage,
+    limit: req.query.rowsPerPage
+  }
+  ModelOrder.find({}, null, query, (docs, err) => {
+    if(!err){
+      res.send(docs)
+    }else{
       res.send(err)
     }
   })

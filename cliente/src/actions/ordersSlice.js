@@ -3,6 +3,7 @@ import axios from 'axios'
 
 const initialState = {
   list: [],
+  slice: [],
   status: 'idle'
 }
 
@@ -12,6 +13,9 @@ export const ordersSlice = createSlice({
   reducers: {
     setOrders: (state, action) => {
       state.list = action.payload
+    },
+    setSlice: (state, action) => {
+      state.slice = action.payload
     },
     createOrder: (state, action) => {
       state.list = [...state.list, action.payload]
@@ -69,7 +73,8 @@ export const ordersSlice = createSlice({
 
 export const {
   createOrder, 
-  setOrders, 
+  setOrders,
+  setSlice,
   changeOrderStatus, 
   deleteOrderProduct, 
   addOrderProduct} = ordersSlice.actions
@@ -87,7 +92,21 @@ export function fetchOrders() {
       });
   };
 }
-
+export function fetchOrdersSlice({page, rowsPerPage}) {
+  return async (dispatch) => {
+    axios
+      .get('/api/norder/getordersslice', {
+        params: {page, rowsPerPage}})
+      .then((response) => {
+        dispatch(setSlice(response.data));
+      })
+      .catch((err) => {
+        console.log('fetchordersslice', err)
+        dispatch(setSlice([]));
+      });
+  };
+}
 export const selectOrders = (state) => state.orders.list
+export const selectSlice = (state) => state.orders.slice
 
 export default ordersSlice.reducer

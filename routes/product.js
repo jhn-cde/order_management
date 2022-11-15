@@ -1,21 +1,8 @@
 const express = require('express')
-
+const ModelProduct = require('../models/product')
 const router = express.Router()
 
-const mongoose = require('mongoose')
-const scheme = mongoose.Schema
-
-const schemeProduct = new scheme({
-  id: Number,
-  Name: String,
-  Category: String,
-  Price: Number,
-  Status: String,
-})
-
-const ModelProduct = mongoose.model('products', schemeProduct)
 module.exports = router
-
 
 router.post('/addproduct', (req, res) => {
   const newProduct = ModelProduct({
@@ -36,8 +23,20 @@ router.post('/addproduct', (req, res) => {
 })
 
 router.get('/getproducts', (req, res) => {
-  console.log('getproducts')
   ModelProduct.find({}, (docs, err) => {
+    if(!err){
+      res.send(docs)
+    }else{
+      res.send(err)
+    }
+  })
+})
+router.get('/getproductsslice', (req, res) => {
+  let query ={
+    skip: req.query.page * req.query.rowsPerPage,
+    limit: req.query.rowsPerPage
+  }
+  ModelProduct.find({}, null, query, (docs, err) => {
     if(!err){
       res.send(docs)
     }else{

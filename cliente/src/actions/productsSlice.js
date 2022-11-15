@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const initialState = {
   list: [],
+  slice: [],
   status: 'idle'
 }
 
@@ -13,6 +14,9 @@ export const productsSlice = createSlice({
   reducers: {
     setProducts: (state, action) => {
       state.list = action.payload
+    },
+    setSlice: (state, action) => {
+      state.slice = action.payload
     },
     create: (state, action) => {
       state.list = [...state.list, action.payload]
@@ -45,7 +49,12 @@ export const productsSlice = createSlice({
   },
 })
 
-export const {create, edit, setProducts, deleteProduct} = productsSlice.actions
+export const {
+  create, 
+  edit, 
+  setProducts,
+  setSlice, 
+  deleteProduct} = productsSlice.actions
 
 export function fetchProducts() {
   return async (dispatch) => {
@@ -60,7 +69,22 @@ export function fetchProducts() {
       });
   };
 }
+export function fetchSlice({page, rowsPerPage}) {
+  return async (dispatch) => {
+    axios
+      .get('/api/product/getproductsslice', {
+        params: {page, rowsPerPage}})
+      .then((response) => {
+        dispatch(setSlice(response.data));
+      })
+      .catch((err) => {
+        console.log('fetchproductsslice', err)
+        dispatch(setSlice([]));
+      });
+  };
+}
 
 export const selectProducts = (state) => state.products.list
+export const selectSlice = (state) => state.products.slice
 
 export default productsSlice.reducer
