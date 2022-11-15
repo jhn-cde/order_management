@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { calculateRange } from "../../utils/divideList"
+import { getRange } from "../../utils/getRange"
 
 const Pagination = ({itemList, setPage, rowsPerPage=5}) => {
   const [range, setRange] = useState([])
 
+  // change range with itemList
   useEffect(() => {
-    const range = calculateRange(itemList, rowsPerPage)
+    const range = getRange(itemList, rowsPerPage)
     setRange([...range])
   }, [itemList, rowsPerPage]);
 
