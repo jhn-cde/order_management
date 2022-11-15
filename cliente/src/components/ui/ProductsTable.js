@@ -11,7 +11,10 @@ const ProductsTable = ({productsList, actions, rowsPerPage=5}) => {
   useEffect(() => {
     dispatch(fetchSlice({page:page-1, rowsPerPage}))
   }, [page, rowsPerPage, dispatch]);
-
+  
+  if(slice.length===0){
+    return <div className="Edit order">Loading...</div>;
+  }
   return (
     <div>
       <table className="table table-striped">
@@ -30,7 +33,7 @@ const ProductsTable = ({productsList, actions, rowsPerPage=5}) => {
             slice.map((product, index) => {
               return (
                 <tr key={product.id}>
-                  <td>{(page-1)*rowsPerPage+index+1}</td>
+                  <td>{product.id}</td>
                   <td>{product.Name}</td>
                   <td>{product.Category}</td>
                   <td>{product.Price}</td>

@@ -15,6 +15,10 @@ const OrdersScreen = () => {
     dispatch(fetchOrdersSlice({page:page-1, rowsPerPage}))
   }, [page, dispatch]);
 
+  if(slice.length===0){
+    return <div className="Edit order">Loading...</div>;
+  }
+
   return(
     <div className='ProductsScreen'>
       <h1 className='mt-3'>Orders</h1>
@@ -40,7 +44,7 @@ const OrdersScreen = () => {
               slice.map((order, index) => {
                 return (
                   <tr key={order.Number}>
-                    <td>{(page-1)*rowsPerPage + index+1}</td>
+                    <td>{order.Number}</td>
                     <td>{order.Consumer}</td>
                     <td>{order.Status}</td>
                     <td>{order.Date}</td>
