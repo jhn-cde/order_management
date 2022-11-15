@@ -1,5 +1,10 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
+
+const whiteList = ['https://jhn-cde.github.io', 'http://localhost:3000']
+
+app.use(cors({origin: whiteList})) //allow everywhere
 
 // importar conexion mongoDB
 const archivoBD = require('./connection')
