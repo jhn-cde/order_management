@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import OrdersScreen from '../orders/OrdersScreen'
 import EditOrderScreen from '../orders/EditOrderScreen'
 import CreateOrderScreen from '../orders/CreateOrderScreen'
@@ -10,22 +10,22 @@ import EditProductScreen from '../products/EditProductScreen'
 
 const AppRouter = () => {
   return(
-    <BrowserRouter>
+    <HashRouter>
       <div className='container mt-3'>
         <Navbar />
         <Routes>
-          <Route path="/" element={<OrdersScreen />}/>
+          <Route exact path="/" element={<Navigate to="/orders" />}/>
 
-          <Route path="/orders" element={<OrdersScreen />}/>
-          <Route path="/orders/:orderid" element={<EditOrderScreen />}/>
-          <Route path="/orders/create" element={<CreateOrderScreen />}/>
+          <Route exact path="/orders" element={<OrdersScreen />}/>
+          <Route exact path="/orders/:orderid" element={<EditOrderScreen />}/>
+          <Route exact path="/orders/create" element={<CreateOrderScreen />}/>
           
-          <Route path="/products" element={<ProductsScreen />}/>
-          <Route path="/products/:productid" element={<EditProductScreen />}/>
-          <Route path="/products/create" element={<CreateProductScreen />}/>
+          <Route exact path="/products" element={<ProductsScreen />}/>
+          <Route exact path="/products/:productid" element={<EditProductScreen />}/>
+          <Route exact path="/products/create" element={<CreateProductScreen />}/>
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 
