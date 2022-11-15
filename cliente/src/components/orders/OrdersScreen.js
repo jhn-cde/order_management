@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
-import { selectOrders } from '../../actions/ordersSlice';
-import { useSelector } from "react-redux";
-import { sliceData } from '../../utils/divideList';
+import { fetchOrdersSlice, selectOrders, selectSlice } from '../../actions/ordersSlice';
+import { useDispatch, useSelector } from "react-redux";
 import Pagination from '../ui/Pagination';
 
-const rowsPerPage = 3
+const rowsPerPage = 4
 const OrdersScreen = () => {
+  const dispatch = useDispatch()
   const ordersList = useSelector(selectOrders)
   const [page, setPage] = useState(1)
-  const [slice, setSlice] = useState([])
+  const slice = useSelector(selectSlice)
 
   useEffect(() => {
-    const slice = sliceData(ordersList, rowsPerPage, page);
-    setSlice([...slice]);
-  }, [ordersList, page]);
+    dispatch(fetchOrdersSlice({page:page-1, rowsPerPage}))
+  }, [page, dispatch]);
 
   return(
     <div className='ProductsScreen'>

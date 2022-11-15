@@ -26,7 +26,7 @@ const ProductsScreen = () => {
       <div style={{height: 300}}>
         <ProductsTable 
           productsList={productsList}
-          rowsPerPage={4}
+          rowsPerPage={3}
           actions={[
             {name: 'Edit', action: editProd},
             {name: 'Delete', action: deleteProd}

@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
-import { sliceData } from "../../utils/divideList"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchSlice, selectSlice } from "../../actions/productsSlice"
 import Pagination from "./Pagination"
 
 const ProductsTable = ({productsList, actions, rowsPerPage=5}) => {
+  const dispatch = useDispatch()
   const [page, setPage] = useState(1)
-  const [slice, setSlice] = useState([])
+  const slice = useSelector(selectSlice)
 
   useEffect(() => {
-    const slice = sliceData(productsList, rowsPerPage, page);
-    setSlice([...slice]);
-  }, [productsList, page, rowsPerPage]);
+    dispatch(fetchSlice({page:page-1, rowsPerPage}))
+  }, [page, rowsPerPage, dispatch]);
 
   return (
     <div>
