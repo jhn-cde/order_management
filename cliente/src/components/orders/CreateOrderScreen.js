@@ -19,7 +19,13 @@ const CreateOrderScreen = () => {
 
   // create new order
   const handleSubmit = ({products, Subtotal}) => {
-    console.log(ordersList.length)
+    //validate Name
+    const regName = /^[a-z A-Z]+$/
+    if(order==='' || !regName.test(order.Consumer)){
+      alert('Please enter a valid name')
+      return
+    }
+    
     const newOrder = {
       ...order,
       Number: ordersList.length!==0?Math.max(...ordersList.map(o => o.Number))+1:1,
@@ -32,48 +38,46 @@ const CreateOrderScreen = () => {
   }
 
   return(
-    <div className="">
-      <div className="">
-        <h1 className="mt-4">New Order</h1>
-        <AddItems onSaveItems={handleSubmit}>
-          <div className="col-md-6">
-            <div className="mb-3">
-              <label htmlFor="consumer" className="form-label">Customer Name</label>
-              <input
-                type="text" 
-                className="form-control"
-                id="consumer"
-                aria-describedby="aria-describedby"
-                name='Consumer'
-                value={order.Consumer}
-                onChange={handleInputChange}
+    <div className="mb-5">
+      <h1 className="mt-4">New Order</h1>
+      <AddItems onSaveItems={handleSubmit}>
+        <div className="col-md-6">
+          <div className="mb-3">
+            <label htmlFor="consumer" className="form-label">Customer Name</label>
+            <input
+              type="text" 
+              className="form-control"
+              id="consumer"
+              aria-describedby="aria-describedby"
+              name='Consumer'
+              value={order.Consumer}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-3 d-flex justify-content-between">
+            <div className="me-4">
+              <select className="form-select" 
+                name="Status" 
+                value={order.Status} 
+                onChange={e => {
+                  handleInputChange({target: {name: 'Status', value: e.target.value}})
+                }}
+              >
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <div className="ms-4">
+              <DatePicker
+                selected={order.Date}
+                onChange={(date) => handleInputChange({target: {name: 'Date', value: new Date(date)}})}
               />
             </div>
-            <div className="mb-3 d-flex justify-content-between">
-              <div className="me-4">
-                <select className="form-select" 
-                  name="Status" 
-                  value={order.Status} 
-                  onChange={e => {
-                    handleInputChange({target: {name: 'Status', value: e.target.value}})
-                  }}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
-              </div>
-
-              <div className="ms-4">
-                <DatePicker
-                  selected={order.Date}
-                  onChange={(date) => handleInputChange({target: {name: 'Date', value: new Date(date)}})}
-                />
-              </div>
-            </div>
           </div>
-        </AddItems>
-      </div>
+        </div>
+      </AddItems>
     </div>
   )
 }
