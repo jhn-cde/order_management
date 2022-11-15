@@ -8,6 +8,18 @@ const ProductForm = ({prod, onSubmit, title}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    
+    //validate Name
+    const regName = /^[a-z A-Z]+$/
+    if(product.Name==='' || !regName.test(product.Name)){
+      alert('Please enter a valid name')
+      return
+    }
+    if(product.Category==='' || !regName.test(product.Category)){
+      alert('Please enter a valid Category')
+      return
+    }
+
     onSubmit(product)
   }
 
@@ -60,6 +72,7 @@ const ProductForm = ({prod, onSubmit, title}) => {
                 id="price"
                 aria-describedby="aria-describedby"
                 name='Price'
+                min={0}
                 value={product.Price}
                 onChange={handleInputChange}
               />
