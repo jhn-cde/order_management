@@ -61,7 +61,7 @@ router.post('/editProduct', (req, res) => {
     Price: req.body.Price,
     Status: req.body.Status,
   }
-  ModelProduct.findOneAndUpdate({Number: req.body.id}, toEdit, (err) => {
+  ModelProduct.findOneAndUpdate({id: req.body.id}, toEdit, (err) => {
     if(!err){
       res.send('Product edited successfully')
     }else{
