@@ -1,5 +1,4 @@
 const order = require('../models/orderModel')
-const { body, validationResult } = require("express-validator");
 const OrderModel = require('../models/orderModel');
 
 const getTaxes = require('../utils/taxes')
