@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
 
 const initialState = {
-  list: [],
-  order: undefined
+  list: undefined,
+  order: undefined,
+  count: 0,
+  page: 1,
+  rowsPerPage: 0
 }
 
 export const ordersSlice = createSlice({
@@ -16,53 +18,30 @@ export const ordersSlice = createSlice({
     setOrder: (state, action) => {
       state.order = action.payload
     },
-    createOrder: (state, action) => {
-      api.post('/api/order/create', action.payload)
-      .then(res => {
-        alert(res.data)
-      })
-      .then(err => {
-        if(err){
-          console.log(err) 
-        }
-      })
+    setOrdersCount: (state, action) => {
+      state.count = action.payload
     },
-    setOrderProducts: (state, action) => {
-      api
-      .post(`/api/order/${action.payload.id}/update`, {products: action.payload.products})
-      .then((response) => {
-        alert(response.data)
-      })
-      .catch((err) => {
-        if(err){
-          console.log(err) 
-        }
-      });
+    setOrdersPage: (state, action) => {
+      state.page = action.payload
     },
-    changeOrderStatus: (state, action) => {
-      api
-        .post(`/api/order/${action.payload.id}/update`, {Status: action.payload.Status})
-        .then((response) => {
-          alert(response.data)
-        })
-        .catch((err) => {
-          if(err){
-            console.log(err) 
-          }
-        });
-    },
+    setOrdersRowsPerPage: (state, action) => {
+      state.rowsPerPage = action.payload
+    }
   }
 })
 
 export const {
   setOrders,
   setOrder,
-  setOrderProducts,
-  changeOrderStatus,
-  createOrder
+  setOrdersCount,
+  setOrdersPage,
+  setOrdersRowsPerPage
 } = ordersSlice.actions
 
 export const selectOrders = (state) => state.orders.list
 export const selectOrder = (state) => state.orders.order
+export const selectOrdersPage = (state) => state.orders.page
+export const selectOrdersCount = (state) => state.orders.count
+export const selectOrdersRowsPerPage = (state) => state.orders.rowsPerPage
 
 export const ordersReducer = ordersSlice.reducer
