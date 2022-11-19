@@ -1,33 +1,39 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { selectOrdersPage, selectOrdersRowsPerPage, selectOrdersSlice, setOrdersPage } from "../actions/ordersPageSlice"
-import { selectOrders } from "../actions/ordersSlice"
+import { selectOrdersPage, selectOrdersRowsPerPage, setOrdersPage, selectOrders } from "../actions/ordersSlice"
 import { getRange } from "../../utils/getRange"
-import { fetchOrdersSlice } from "../../api/orders"
+import { fetchOrders } from "../../api/orders"
 import { TableContainer } from "../../components/TableContainer"
 import { Search } from "../../components/Search"
+import { api } from "../../api/api"
 
 export const OrdersTable = ({ actions }) => {
   const [range, setRange] = useState([])
   const dispatch = useDispatch()
   const rowsPerPage = useSelector(selectOrdersRowsPerPage)
-  const orders = useSelector(selectOrders)
-  const slice = useSelector(selectOrdersSlice)
+  const slice = useSelector(selectOrders)
   const page = useSelector(selectOrdersPage)
 
   useEffect(() => {
-    const tmpRange = getRange(orders, rowsPerPage)
-    setRange([...tmpRange])
+    api.get('/api/orders/count')
+      .then((res) => {
+        const tmpRange = getRange(res.data.count, rowsPerPage)
+        setRange([...tmpRange])
+      })
+      .catch((err) => {
+        if(err)
+        console.log('get count', err)
+      });
 
-    dispatch(fetchOrdersSlice({
+    dispatch(fetchOrders({
       page: page-1, 
       rowsPerPage: rowsPerPage,
       searchtext: ''
     }))
-  }, [rowsPerPage, page, orders, dispatch]);
+  }, [rowsPerPage, page, dispatch]);
   
   const handleSearch = (searchtext) => {
-    dispatch(fetchOrdersSlice({page:0, rowsPerPage, searchtext}))
+    dispatch(fetchOrders({page:0, rowsPerPage, searchtext}))
   }
 
   if(!slice || slice.length === 0){
