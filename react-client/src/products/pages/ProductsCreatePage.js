@@ -1,10 +1,9 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { createProduct, selectProducts } from "../actions/productsSlice"
+import { createProduct } from "../../api/products"
 import { ProductForm } from "../components/ProductForm"
 
 export const ProductsCreatePage = () => {
-  const products = useSelector(selectProducts)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -19,11 +18,7 @@ export const ProductsCreatePage = () => {
       return
     }
     
-    const newProduct = {
-      ...product,
-      id: products.length!==0?Math.max(...products.map(o => o.id))+1:1
-    }
-    dispatch(createProduct(newProduct))
+    dispatch(createProduct(product))
     navigate('/products')
   }
 
