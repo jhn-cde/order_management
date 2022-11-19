@@ -19,6 +19,9 @@ app.use(bodyParser.urlencoded({extended:'true'}))
 const product = require('./routes/product')
 app.use('/api', product)
 
+const order = require('./routes/order')
+app.use('/api', order)
+
 //home
 app.get('/', (req, res) => {
   res.send('Order management home page')
