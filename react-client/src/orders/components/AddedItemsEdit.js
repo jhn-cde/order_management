@@ -12,10 +12,10 @@ export const AddedItemsEdit = ({children, order, onSave}) => {
   const [subTotal, setSubTotal] = useState(order.Subtotal)
   
   useEffect(() => {
-    if(!products || products.length===0){
-      dispatch(fetchProducts())
-    }
-  }, [dispatch, products])
+    dispatch(fetchProducts({
+      page:0, rowsPerPage:0, searchtext:''
+    }))
+  }, [dispatch])
   
   const addItem = (productid) => {
     const product = products.find(p => p.id === productid)
@@ -52,7 +52,7 @@ export const AddedItemsEdit = ({children, order, onSave}) => {
       <div className="row">
         <h3>Products</h3>
         <table className="table table-striped mb-4">
-          <ProductsTable
+          {products&&<ProductsTable
             actions={[{
               name: 'Add',
               action: addItem
@@ -64,7 +64,7 @@ export const AddedItemsEdit = ({children, order, onSave}) => {
                 ) && p.Status==='Active'
               )
             }
-          />
+          />}
         </table>
         <div className="d-flex justify-content-end">
           <button 
