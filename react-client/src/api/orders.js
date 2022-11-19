@@ -1,11 +1,11 @@
-import { setOrdersSlice } from "../orders/actions/ordersPageSlice";
 import { setOrder, setOrders } from "../orders/actions/ordersSlice";
 import { api } from "./api";
 
-export const fetchOrders = () => {
+export const fetchOrders = ({page, rowsPerPage, searchtext}) => {
   return async (dispatch) => {
     api
-      .get('/api/orders')
+      .get('/api/orders', {
+        params: {skip: page*rowsPerPage, limit: rowsPerPage, search: searchtext}})
       .then((response) => {
         dispatch(setOrders(response.data));
       })
@@ -30,16 +30,33 @@ export const fetchOrder = ({id}) => {
   };
 }
 
-export const fetchOrdersSlice = ({page, rowsPerPage, searchtext}) => {
+export const updateOrder = ({id, toUpdate}) => {
   return async (dispatch) => {
     api
-      .get('/api/orders', {params: {skip: page*rowsPerPage, limit: rowsPerPage, search: searchtext}})
+      .post(`/api/order/${id}/update`, toUpdate)
       .then((response) => {
-        dispatch(setOrdersSlice(response.data));
+        alert(response.data.ans)
+        dispatch(setOrder(response.data.order))
       })
       .catch((err) => {
-        console.log('fetchordersslice', err)
-        dispatch(setOrdersSlice([]));
+        if(err){
+          console.log(err) 
+        }
+      });
+  };
+}
+
+export const createOrder = (order) => {
+  return async (dispatch) => {
+    api
+      .post(`/api/order/create`, order)
+      .then((response) => {
+        alert(response.data)
+      })
+      .catch((err) => {
+        if(err){
+          console.log(err) 
+        }
       });
   };
 }
