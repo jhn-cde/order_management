@@ -12,7 +12,7 @@ export const OrderDetails = ({ order }) => {
         </tr>
         <tr>
           <td>Date</td>
-          <td>{order.Date}</td>
+          <td>{new Date(order.Date).toLocaleDateString()}</td>
         </tr>
       </tbody>
     </table>
