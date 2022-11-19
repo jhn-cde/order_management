@@ -1,8 +1,8 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { fetchProduct } from "../../api/products"
-import { editProduct, selectProduct } from "../actions/productsSlice"
+import { fetchProduct, updateProduct } from "../../api/products"
+import { selectProduct } from "../actions/productsSlice"
 import { ProductForm } from "../components/ProductForm"
 
 export const ProductsEditPage = () => {
@@ -17,7 +17,7 @@ export const ProductsEditPage = () => {
   }, [dispatch, productid], product)
 
   const onSubmit = (editedProduct) => {
-    dispatch(editProduct({id:productid, toUpdate:{
+    dispatch(updateProduct({id:productid, toUpdate:{
       Name: editedProduct.Name,
       Category: editedProduct.Category,
       Price: editedProduct.Price,
