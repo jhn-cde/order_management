@@ -1,83 +1,17 @@
 const express = require('express')
-const ModelProduct = require('../models/product')
-const router = express.Router()
+const productsRoute = express.Router()
+const product_controller = require('../controllers/productController')
 
-module.exports = router
+productsRoute.get('/products', product_controller.product_list)
 
-router.post('/addproduct', (req, res) => {
-  const newProduct = ModelProduct({
-    id: req.body.id,
-    Name: req.body.Name,
-    Category: req.body.Category,
-    Price: req.body.Price,
-    Status: req.body.Status
-  })
-  newProduct.save((err) => {
-    if(!err){
-      res.send(`Product ${req.body.Name}, id: ${req.body.id} added`)
-    }else{
-      console.log(err)
-      res.send('err')
-    }
-  })
-})
+productsRoute.get('/products/count', product_controller.product_count)
 
-router.get('/getproducts', (req, res) => {
-  ModelProduct.find({}, (docs, err) => {
-    if(!err){
-      res.send(docs)
-    }else{
-      res.send(err)
-    }
-  }).sort({id:1})
-})
+productsRoute.post('/product/create', product_controller.product_create_post)
 
-router.get('/getproductsslice', (req, res) => {
-  const query ={
-    pag: {
-      skip: req.query.page * req.query.rowsPerPage,
-      limit: req.query.rowsPerPage
-    },
-    search: {
-      Name: {$regex: `.*${req.query.searchtext}.*`, $options: 'i'}
-    }
-  }
-  
-  ModelProduct.find(query.search, {}, query.pag, (err, docs) => {
-    if(!err){
-      res.send(docs)
-    }else{
-      console.log(err)
-      res.send([])
-    }
-  }).sort({id:1})
-})
+productsRoute.get('/product/:id', product_controller.product_detail)
 
-router.post('/editProduct', (req, res) => {
-  
-  const toEdit = {
-    Name: req.body.Name,
-    Category: req.body.Category,
-    Price: req.body.Price,
-    Status: req.body.Status,
-  }
-  ModelProduct.findOneAndUpdate({Number: req.body.id}, toEdit, (err) => {
-    if(!err){
-      res.send('Product edited successfully')
-    }else{
-      console.log('error! editOrderProducts ', err)
-      res.send(err)
-    }
-  })
-})
+productsRoute.post('/product/:id/delete', product_controller.product_delete_post)
 
-router.post('/deleteproduct', (req, res) => {
-  ModelProduct.findOneAndDelete({id:req.body.id}, (err) => {
-    if(!err){
-      res.send(`Product id: ${req.body.id} deleted`)
-    }else{
-      console.log('error! deleteproduct ', err)
-      res.send(err)
-    }
-  })
-})
+productsRoute.post('/product/:id/update', product_controller.product_update_post)
+
+module.exports = productsRoute
