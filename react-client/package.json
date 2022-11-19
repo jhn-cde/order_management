@@ -1,6 +1,6 @@
 {
   "homepage": "https://jhn-cde.github.io/order_management",
-  "name": "cliente",
+  "name": "order-management",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
