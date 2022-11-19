@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
 import { Link } from "react-router-dom"
-import { setProductsRowsPerPage } from "../actions/productsPageSlice"
+import { setProductsRowsPerPage } from "../actions/productsSlice"
 import { ProductsTableContainer } from "../components/ProductsTableContainer"
 
 export const ProductsPage = () => {
