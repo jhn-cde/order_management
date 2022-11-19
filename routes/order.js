@@ -4,6 +4,8 @@ const order_controller = require('../controllers/orderController')
 
 ordersRoute.get('/orders', order_controller.order_list)
 
+ordersRoute.get('/orders/count', order_controller.order_count)
+
 ordersRoute.post('/order/create', order_controller.order_create_post)
 
 ordersRoute.get('/order/:id', order_controller.order_detail)

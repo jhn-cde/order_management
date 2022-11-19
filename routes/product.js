@@ -4,6 +4,8 @@ const product_controller = require('../controllers/productController')
 
 productsRoute.get('/products', product_controller.product_list)
 
+productsRoute.get('/products/count', product_controller.product_count)
+
 productsRoute.post('/product/create', product_controller.product_create_post)
 
 productsRoute.get('/product/:id', product_controller.product_detail)
