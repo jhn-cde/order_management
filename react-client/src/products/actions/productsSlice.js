@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { api } from "../../api/api";
 
 const initialState = {
-  list: [],
-  product: undefined
+  list: undefined,
+  product: undefined,
+  count: 0,
+  page: 1,
+  rowsPerPage: 0
 }
 
 export const productsSlice = createSlice({
@@ -16,38 +18,14 @@ export const productsSlice = createSlice({
     setProduct: (state, action) => {
       state.product = action.payload
     },
-    editProduct: (state, action) => {
-      api.post(`/api/product/${action.payload.id}/update`, action.payload.toUpdate)
-      .then(res => {
-        alert(res.data)
-      })
-      .then(err => {
-        if(err){
-          console.log(err) 
-        }
-      })
+    setProductsCount: (state, action) => {
+      state.count = action.payload
     },
-    createProduct: (state, action) => {
-      api.post('/api/product/create', action.payload)
-      .then(res => {
-        alert(res.data)
-      })
-      .then(err => {
-        if(err){
-          console.log(err) 
-        }
-      })
+    setProductsPage: (state, action) => {
+      state.page = action.payload
     },
-    deleteProduct: (state, action) => {
-      api.post(`/api/product/${action.payload.id}/delete`)
-      .then(res => {
-        alert(res.data)
-      })
-      .then(err => {
-        if(err){
-          console.log(err) 
-        }
-      })
+    setProductsRowsPerPage: (state, action) => {
+      state.rowsPerPage = action.payload
     }
   }
 })
@@ -55,12 +33,15 @@ export const productsSlice = createSlice({
 export const {
   setProducts,
   setProduct,
-  createProduct,
-  deleteProduct,
-  editProduct
+  setProductsCount,
+  setProductsPage,
+  setProductsRowsPerPage
 } = productsSlice.actions
 
 export const selectProducts = (state) => state.products.list
 export const selectProduct = (state) => state.products.product
+export const selectProductsCount = (state) => state.products.count
+export const selectProductsPage = (state) => state.products.page
+export const selectProductsRowsPerPage = (state) => state.products.rowsPerPage
 
 export const productsReducer = productsSlice.reducer
