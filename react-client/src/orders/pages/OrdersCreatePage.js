@@ -1,13 +1,11 @@
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "../../hooks/useForm"
-import { createOrder, selectOrders } from "../actions/ordersSlice"
 import { AddedItemsEdit } from "../components/AddedItemsEdit"
-import { fetchOrders } from "../../api/orders";
+import { createOrder } from "../../api/orders";
 
 export const OrdersCreatePage = () => {
-  const ordersList = useSelector(selectOrders)
   const dispatch = useDispatch()
 
   const [order, handleInputChange] = useForm({
@@ -25,13 +23,11 @@ export const OrdersCreatePage = () => {
     
     const newOrder = {
       ...order,
-      Number: ordersList.length!==0?Math.max(...ordersList.map(o => o.Number))+1:1,
       products: addedItems,
       Subtotal: subTotal,
       Date: order.Date.toLocaleDateString()
     }
     dispatch(createOrder(newOrder))
-    dispatch(fetchOrders())
   }
 
   return(
