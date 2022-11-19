@@ -1,30 +1,29 @@
 const express = require('express')
 const app = express()
+const port = 5000
+
 const cors = require('cors')
-
 const whiteList = ['https://jhn-cde.github.io', 'http://localhost:3000']
+// allow everywhere
+app.use(cors({origin: whiteList}))
 
-app.use(cors({origin: whiteList})) //allow everywhere
-
-// importar conexion mongoDB
-const archivoBD = require('./connection')
-
-// importar el archivo de rutas
-const routeProduct = require('./routes/product')
-const routeNorder = require('./routes/norder')
+// import connection mongoDB atlas
+const BD = require('./db/connection')
 
 //body parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:'true'}))
 
-app.use('/api/product', routeProduct)
-app.use('/api/norder', routeNorder)
+//routes
+const product = require('./routes/product')
+app.use('/api', product)
 
+//home
 app.get('/', (req, res) => {
-  res.end('Hello world')
+  res.send('Order management home page')
 })
 
-app.listen(5000, () => { 
-  console.log('server running in port (5000) http://localhost:5000')
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
 })
