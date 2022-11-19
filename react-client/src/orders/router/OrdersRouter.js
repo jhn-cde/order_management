@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { fetchOrders } from '../../api/orders'
 import { OrdersCreatePage } from '../pages/OrdersCreatePage'
 import { OrdersEditPage } from '../pages/OrdersEditPage'
 import { OrdersPage } from '../pages/OrdersPage'
 
 export const OrdersRouter = () => {
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchOrders())
-  }, [dispatch])
-  
   return(
     <Routes>
       <Route exact path="/" element={<OrdersPage />}/>
