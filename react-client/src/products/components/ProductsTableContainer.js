@@ -1,46 +1,56 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { fetchProductsSlice } from "../../api/products"
 import { Search } from "../../components/Search"
 import { getRange } from "../../utils/getRange"
 import { ProductsTable } from "./ProductsTable"
 import { useNavigate } from "react-router-dom"
-import { selectProductsPage, selectProductsrowsPerPage, selectProductsSlice, setProductsPage } from "../actions/productsPageSlice"
-import { deleteProduct, selectProducts } from "../actions/productsSlice"
+import { selectProducts, selectProductsPage, selectProductsRowsPerPage, setProductsPage } from "../actions/productsSlice"
 import { TableContainer } from "../../components/TableContainer"
+import { deleteProduct, fetchProducts } from "../../api/products"
+import { api } from "../../api/api"
 
 export const ProductsTableContainer = () => {
   const navigate = useNavigate()
   const [range, setRange] = useState([])
-  const rowsPerPage = useSelector(selectProductsrowsPerPage)
-  const products = useSelector(selectProducts)
-  const slice = useSelector(selectProductsSlice)
+  const rowsPerPage = useSelector(selectProductsRowsPerPage)
+  const slice = useSelector(selectProducts)
   const page = useSelector(selectProductsPage)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const tmpRange = getRange(products, rowsPerPage)
-    setRange([...tmpRange])
+    api.get('/api/orders/count')
+      .then((res) => {
+        const tmpRange = getRange(res.data.count, rowsPerPage)
+        setRange([...tmpRange])
+      })
+      .catch((err) => {
+        if(err)
+        console.log('get count', err)
+      });
 
-    dispatch(fetchProductsSlice({
+    dispatch(fetchProducts({
       page: page-1, 
       rowsPerPage: rowsPerPage,
       searchtext: ''
     }))
-  }, [rowsPerPage, page, products, dispatch]);
+  }, [rowsPerPage, page, dispatch]);
   
   const setPage = (newPage) => {
     dispatch(setProductsPage(newPage))
   }
 
   const handleSearch = (searchtext) => {
-    dispatch(fetchProductsSlice({page:0, rowsPerPage, searchtext}))
+    dispatch(fetchProducts({page:0, rowsPerPage, searchtext}))
   }
 
   const deleteProd = (id) => {
     if(window.confirm(`Are you sure you want to delete the product with ${id}`)){
-      dispatch(deleteProduct({id}))
-      dispatch(fetchProductsSlice({page: page-1, rowsPerPage, searchtext:''}))
+      dispatch(deleteProduct(id))
+      dispatch(fetchProducts({
+        page: page-1, 
+        rowsPerPage: rowsPerPage,
+        searchtext: ''
+      }))
     }
   }
 
