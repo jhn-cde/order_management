@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
-import { setOrdersRowsPerPage } from "../actions/ordersPageSlice"
+import { setOrdersRowsPerPage } from "../actions/ordersSlice"
 import { OrdersTable } from "../components/OrdersTable"
 
 export const OrdersPage = () => {
@@ -8,7 +8,7 @@ export const OrdersPage = () => {
   const navigate = useNavigate()
   
   dispatch(setOrdersRowsPerPage(4))
-
+  
   return(
     <div className="row mt-5">
       <div className="col">
