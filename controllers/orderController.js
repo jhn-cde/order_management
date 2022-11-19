@@ -3,6 +3,17 @@ const OrderModel = require('../models/orderModel');
 
 const getTaxes = require('../utils/taxes')
 
+//count documents
+exports.order_count = (req, res, next) => {
+  const query = OrderModel.countDocuments()
+  query.exec((err, count)=>{
+    if(err){
+      return next(err)
+    }
+    res.send({count})
+  })
+}
+
 //list of orders
 exports.order_list = (req, res, next) => {
   const searchtext = req.query.search?req.query.search : ''
@@ -29,33 +40,39 @@ exports.order_detail = (req, res, next) => {
       if(err){
         return next(err)
       }
-      res.send({...order_detail._doc, Date: order_detail.date_formatted})
+      res.send(order_detail)
     })
 }
 
 // Handle order create on post
 exports.order_create_post = (req, res, next) => {
-  //data is valid
-  const taxes = getTaxes(req.body.products)
-  const order = new OrderModel({
-    ...taxes,
-    Number: req.body.Number,
-    Date: req.body.Date,
-    Consumer: req.body.Consumer,
-    Status: req.body.Status,
-    products: req.body.products
-  })
-  order.save((err) => {
+  const query = OrderModel.countDocuments()
+  query.exec((err, count)=>{
     if(err) {
       return next(err)
     }
-    //successful
-    res.send(`Order number ${order.Number} created successfully`)
+    //data is valid
+    const taxes = getTaxes(req.body.products)
+    const order = new OrderModel({
+      ...taxes,
+      Number: count+1,
+      Date: req.body.Date,
+      Consumer: req.body.Consumer,
+      Status: req.body.Status,
+      products: req.body.products
+    })
+    order.save((err) => {
+      if(err) {
+        return next(err)
+      }
+      //successful
+      res.send(`Order number ${order.Number} created successfully`)
+    })
   })
 }
 
 // Handle order update on POST.
-exports.order_update_post = (req, res) => {
+exports.order_update_post = (req, res, next) => {
   let toUpdate = {...req.body}
   if(req.body.products){
     const taxes = getTaxes(req.body.products)
@@ -66,11 +83,11 @@ exports.order_update_post = (req, res) => {
   }
 
   OrderModel.findOneAndUpdate({Number: req.params.id}, toUpdate, (err, order) => {
-    if(!err){
-      res.send(`Order number ${req.params.id} updated successfully`)
-    }else{
-      console.log('error! editOrderStatus ', err)
-      res.send(err)
-    }
+    if(err)
+      return next(err)
+    res.send({
+      order: {...order._doc, ...toUpdate},
+      ans: `Order number ${req.params.id} updated successfully`
+    })
   })
 };
