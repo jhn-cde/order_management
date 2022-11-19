@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
-import { fetchOrder } from "../../api/orders"
-import { changeOrderStatus, selectOrder, setOrderProducts } from "../actions/ordersSlice"
+import { fetchOrder, updateOrder } from "../../api/orders"
+import { selectOrder } from "../actions/ordersSlice"
 import { AddedItemsEdit } from "../components/AddedItemsEdit"
 import { ItemsTable } from "../components/ItemsTable"
 import { OrderDetails } from "../components/OrderDetails"
@@ -21,27 +21,26 @@ export const OrdersEditPage = () => {
   }, [dispatch, orderid])
 
   const saveItems = ({addedItems}) => {
-    dispatch(setOrderProducts({
+    dispatch(updateOrder({
       id: Number(orderid),
-      products: addedItems
+      toUpdate: {products: addedItems}
     }))
-    dispatch(fetchOrder({id: orderid}))
     setEditItems(false)
   }
   const deleteProduct = (itemid) => {
     const newAddedItems = order.products.filter(
       product => product.id !== itemid)
     
-    dispatch(setOrderProducts({
+    dispatch(updateOrder({
       id: Number(orderid),
-      products: newAddedItems
+      toUpdate: {products: newAddedItems}
     }))
-    dispatch(fetchOrder({id: orderid}))
     setEditItems(false)
   }
   const changeStatus = (status) => {
-    dispatch(changeOrderStatus({id: Number(orderid), Status:status}))
-    dispatch(fetchOrder({id: orderid}))
+    dispatch(updateOrder({
+      id: Number(orderid), 
+      toUpdate: {Status:status}}))
   }
 
   if(!order){
